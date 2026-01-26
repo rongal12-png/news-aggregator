@@ -1,0 +1,33 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background with gradient -->
+  <rect width="512" height="512" rx="96" fill="url(#bg-gradient)"/>
+
+  <!-- Main content area (stylized document/news) -->
+  <rect x="96" y="80" width="320" height="352" rx="24" fill="white" fill-opacity="0.15"/>
+
+  <!-- Text lines representing news/briefing -->
+  <rect x="128" y="128" width="256" height="24" rx="12" fill="white"/>
+  <rect x="128" y="176" width="200" height="24" rx="12" fill="white" fill-opacity="0.8"/>
+  <rect x="128" y="224" width="224" height="24" rx="12" fill="white" fill-opacity="0.6"/>
+
+  <!-- Bullet points -->
+  <circle cx="144" y="300" r="8" fill="#fbbf24"/>
+  <rect x="172" y="288" width="180" height="24" rx="12" fill="white" fill-opacity="0.7"/>
+
+  <circle cx="144" y="352" r="8" fill="#fbbf24"/>
+  <rect x="172" y="340" width="160" height="24" rx="12" fill="white" fill-opacity="0.7"/>
+
+  <!-- AI/Summary indicator (sparkle) -->
+  <g transform="translate(368, 64)">
+    <circle cx="32" cy="32" r="40" fill="#fbbf24"/>
+    <path d="M32 8 L36 24 L52 28 L36 32 L32 48 L28 32 L12 28 L28 24 Z" fill="white"/>
+  </g>
+
+  <!-- Gradient definitions -->
+  <defs>
+    <linearGradient id="bg-gradient" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#8b5cf6"/>
+    </linearGradient>
+  </defs>
+</svg>

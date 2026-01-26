@@ -1,0 +1,84 @@
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+.venv/
+ENV/
+.eggs/
+*.egg-info/
+*.egg
+dist/
+build/
+
+# Node
+node_modules/
+.next/
+out/
+.npm
+*.tsbuildinfo
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Docker
+*.pid
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+
+# Misc
+*.bak
+*.tmp
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Secrets / Keys
+*.pem
+*.key
+secrets/
+
+# Local development
+.claude/
+*.local
+
+# Alembic
+alembic/versions/*.pyc
+
+# Coverage reports
+coverage/
+.nyc_output/
+
+# Build artifacts
+*.min.js
+*.min.css
+.cache/
+
+# Package lock (optional - uncomment if you want to ignore)
+# package-lock.json
+# yarn.lock
