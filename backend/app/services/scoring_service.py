@@ -7,8 +7,8 @@ from app.models import Story, Article
 
 
 # Minimum thresholds for story quality
-MIN_SOURCES_FOR_DISPLAY = 2  # Story must have at least 2 sources to be shown
-MIN_SCORE_THRESHOLD = 1.5    # Minimum score to be considered relevant
+MIN_SOURCES_FOR_DISPLAY = 1  # Story must have at least 1 source to be shown
+MIN_SCORE_THRESHOLD = 0.0    # Minimum score to be considered relevant
 
 
 @dataclass
@@ -74,15 +74,25 @@ class ScoringService:
 
         source_count = len(source_ids)
 
-        # Stories with only 1 source get penalized heavily
-        if source_count < MIN_SOURCES_FOR_DISPLAY:
+        # Stories with only 1 source get a lower score but still display
+        if source_count == 1:
+            # Single-source stories still get a reasonable score
+            now = datetime.now(timezone.utc)
+            if story.published_at.tzinfo is None:
+                age = now - story.published_at.replace(tzinfo=timezone.utc)
+            else:
+                age = now - story.published_at
+            age_hours = max(0.0, age.total_seconds() / 3600)  # Ensure non-negative
+            freshness = 1.0 / (1.0 + (age_hours / 12.0) ** 1.2)
+            base_score = 3.0 + weight_sum  # Base score for single-source
+            final_score = round(float(base_score * freshness), 4)
             if return_breakdown:
                 return ScoreBreakdown(
-                    source_count=source_count, weight_sum=weight_sum, freshness=0.1,
+                    source_count=source_count, weight_sum=float(weight_sum), freshness=round(float(freshness), 4),
                     breaking_bonus=0.0, diversity_bonus=0.0,
-                    coverage_bonus=0.0, authority_bonus=0.0, final_score=0.1
+                    coverage_bonus=1.0, authority_bonus=round(float(weight_sum), 2), final_score=final_score
                 )
-            return 0.1  # Very low score, won't show up in top stories
+            return final_score
 
         # Calculate freshness decay - faster decay for older stories
         now = datetime.now(timezone.utc)
@@ -91,7 +101,7 @@ class ScoringService:
         else:
             age = now - story.published_at
 
-        age_hours = age.total_seconds() / 3600
+        age_hours = max(0.0, age.total_seconds() / 3600)  # Ensure non-negative
 
         # Faster decay: stories lose relevance quicker
         freshness = 1.0 / (1.0 + (age_hours / 12.0) ** 1.2)
