@@ -53,6 +53,54 @@ SAMPLE_SOURCES = [
         "weight": 1.5,
     },
 
+    # Israel
+    {
+        "name": "Times of Israel",
+        "feed_url": "https://www.timesofisrael.com/feed/",
+        "language": "en",
+        "category": "israel",
+        "weight": 2.0,
+    },
+    {
+        "name": "Jerusalem Post",
+        "feed_url": "https://www.jpost.com/rss/rssfeedsfrontpage.aspx",
+        "language": "en",
+        "category": "israel",
+        "weight": 2.0,
+    },
+    {
+        "name": "i24NEWS",
+        "feed_url": "https://www.i24news.tv/en/rss",
+        "language": "en",
+        "category": "israel",
+        "weight": 1.5,
+    },
+
+    # Politics
+    {
+        "name": "BBC Politics",
+        "feed_url": "http://feeds.bbci.co.uk/news/politics/rss.xml",
+        "language": "en",
+        "category": "politics",
+        "weight": 1.5,
+    },
+    {
+        "name": "NPR Politics",
+        "feed_url": "https://feeds.npr.org/1014/rss.xml",
+        "language": "en",
+        "category": "politics",
+        "weight": 1.5,
+    },
+
+    # World
+    {
+        "name": "BBC World",
+        "feed_url": "http://feeds.bbci.co.uk/news/world/rss.xml",
+        "language": "en",
+        "category": "world",
+        "weight": 2.0,
+    },
+
     # General News
     {
         "name": "BBC News",

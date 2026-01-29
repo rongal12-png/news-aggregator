@@ -1,8 +1,13 @@
+import asyncio
+import logging
+
 from celery import shared_task
 
 from app.db import SessionLocal
 from app.services.cluster_service import ClusterService
 from app.services.scoring_service import ScoringService
+
+logger = logging.getLogger(__name__)
 
 
 def is_refresh_enabled() -> bool:
@@ -36,16 +41,47 @@ def cluster_stories(self, force: bool = False):
     db = SessionLocal()
 
     try:
-        # Cluster articles
         cluster_service = ClusterService(db)
+
+        # Step 1: Filter articles for newsworthiness before clustering
+        filtered_count = 0
+        try:
+            from app.services.pipeline_service import PipelineService
+            from app.models import Article
+
+            # Get unfiltered, unclustered articles that haven't been evaluated yet
+            unfiltered = (
+                db.query(Article)
+                .filter(
+                    Article.story_id == None,
+                    Article.is_filtered == False,
+                    Article.importance_score == None,
+                )
+                .all()
+            )
+
+            if unfiltered:
+                pipeline = PipelineService(db)
+                result = asyncio.run(pipeline.filter_articles(unfiltered))
+                filtered_count = result.get("filtered_count", 0)
+                logger.info(
+                    f"Article filter: {result.get('passed_count', 0)} passed, "
+                    f"{filtered_count} filtered"
+                )
+
+        except Exception as e:
+            logger.error(f"Article filtering failed (continuing without filter): {e}")
+
+        # Step 2: Cluster articles (only non-filtered ones)
         clustered_count = cluster_service.cluster_articles()
 
-        # Update all story scores
+        # Step 3: Update all story scores
         scoring_service = ScoringService(db)
         stories_updated = scoring_service.update_all_scores()
 
         return {
             "status": "completed",
+            "articles_filtered": filtered_count,
             "articles_clustered": clustered_count,
             "stories_scored": stories_updated,
         }

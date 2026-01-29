@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session, joinedload
+from sqlalchemy import or_
 from typing import Optional
 
 from app.db import get_db
@@ -106,7 +107,16 @@ async def get_top_stories(
 
     # Filter by category if specified
     if category and category != "all":
-        query = query.filter(Story.category == category)
+        if category == "israel":
+            # Israel category: match by country_code OR source category
+            query = query.filter(
+                or_(
+                    Story.country_code == 'IL',
+                    Story.category == 'israel'
+                )
+            )
+        else:
+            query = query.filter(Story.category == category)
 
     # Fetch extra stories if we need to filter by tags/sources (post-filtering)
     fetch_limit = limit * 2 if (tags or exclude_tags or sources) else limit

@@ -25,6 +25,7 @@ class ClusterService:
                 Article.published_at >= cutoff,
                 Article.normalized_key != None,
                 Article.normalized_key != "",
+                Article.is_filtered != True,  # Skip filtered articles
             )
             .order_by(Article.published_at.desc())
             .all()
